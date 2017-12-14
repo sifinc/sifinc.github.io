@@ -1,0 +1,313 @@
+<!doctype html>
+<html lang="en" ng-app="sifinc">
+    <head>
+        <meta charset="utf-8">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"/>
+        <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.2/angular.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.2/angular-cookies.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js"></script>
+
+        <script src="main.js"></script>
+    </head>
+    <body ng-controller="mainController">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col">
+                    Rank: {{getPlayerLevel()}}
+                </div>
+                <div class="col">
+                    Gold: {{getPlayerGold()}}
+                </div>
+                <div class="col">
+                    Friend Points: {{getPlayerFriendPoints()}}
+                </div>
+                <div class="col">
+                    Love Gems: {{getPlayerLoveca()}}
+                </div>
+                <div class="col">
+                    EXP: {{getPlayerExperience().cur}}/{{getPlayerExperience().next}}
+                </div>
+                <div class="col">
+                    LP: {{getPlayerLp().cur}}/{{getPlayerLp().max}}
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col">
+                    <hr>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col">
+                    <button ng-if="getSelectedScreen() != 0" type="button" class="btn btn-block" ng-click="setSelectedScreen(0)">Songs</button>
+                    <button ng-if="getSelectedScreen() == 0" type="button" class="btn btn-block btn-primary">Songs</button>
+                </div>
+                <div class="col">
+                    <button ng-if="getSelectedScreen() != 1" type="button" class="btn btn-block" ng-click="setSelectedScreen(1)">Scout</button>
+                    <button ng-if="getSelectedScreen() == 1" type="button" class="btn btn-block btn-primary">Scout</button>
+                </div>
+                <div class="col">
+                    <button ng-if="getSelectedScreen() != 2" type="button" class="btn btn-block" ng-click="setSelectedScreen(2)">Album</button>
+                    <button ng-if="getSelectedScreen() == 2" type="button" class="btn btn-block btn-primary">Album</button>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col">
+                    <hr>
+                </div>
+            </div>
+
+            <span ng-if="getSelectedScreen() == 0">
+                <div class="row">
+                    <div class="col">
+                        <button ng-if="getDifficulty() != 0" type="button" class="btn btn-block" ng-click="setDifficulty(0)">{{getDifficultyName(0)}}</button>
+                        <button ng-if="getDifficulty() == 0" type="button" class="btn btn-block btn-success">{{getDifficultyName(0)}}</button>
+                    </div>
+                    <div class="col">
+                        <button ng-if="getDifficulty() != 1" type="button" class="btn btn-block" ng-click="setDifficulty(1)">{{getDifficultyName(1)}}</button>
+                        <button ng-if="getDifficulty() == 1" type="button" class="btn btn-block btn-info">{{getDifficultyName(1)}}</button>
+                    </div>
+                    <div class="col">
+                        <button ng-if="getDifficulty() != 2" type="button" class="btn btn-block" ng-click="setDifficulty(2)">{{getDifficultyName(2)}}</button>
+                        <button ng-if="getDifficulty() == 2" type="button" class="btn btn-block btn-primary">{{getDifficultyName(2)}}</button>
+                    </div>
+                    <div class="col">
+                        <button ng-if="getDifficulty() != 3" type="button" class="btn btn-block" ng-click="setDifficulty(3)">{{getDifficultyName(3)}}</button>
+                        <button ng-if="getDifficulty() == 3" type="button" class="btn btn-block btn-warning">{{getDifficultyName(3)}}</button>
+                    </div>
+                    <div class="col">
+                        <button ng-if="getDifficulty() != 4" type="button" class="btn btn-block" ng-click="setDifficulty(4)">{{getDifficultyName(4)}}</button>
+                        <button ng-if="getDifficulty() == 4" type="button" class="btn btn-block btn-danger">{{getDifficultyName(4)}}</button>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col">
+                        <br>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-3">
+                        <div class="row">
+                            <div class="col text-center">
+                                {{getSelectedSong().name}}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <center><img ng-src="{{getSelectedSong().cover}}" width="200" height="200"/></center>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <button type="button" class="btn btn-warning btn-block" ng-click="playSong()">Play Song (Cost: {{getSongCost()}} LP)</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="row">
+                            <div class="col">
+                                Stars: {{getSelectedSong().stats[getDifficulty()].stars}}
+                            </div>
+                            <div class="col">
+                                Best Score: {{getSelectedSong().stats[getDifficulty()].score.best}}
+                            </div>
+                            <div class="col">
+                                Best Combo: {{getSelectedSong().stats[getDifficulty()].combo.best}}
+                            </div>
+                            <div class="col">
+                                Times Cleared: {{getSelectedSong().stats[getDifficulty()].clear.best}}
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col">
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th></th>
+                                            <th>C Reward</th>
+                                            <th>B Reward</th>
+                                            <th>A Reward</th>
+                                            <th>S Reward</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <th>Score</th>
+                                            <td ng-if="getSelectedSong().stats[getDifficulty()].score.bestRank <= 0" class="table-danger">{{getSelectedSong().stats[getDifficulty()].score.prize[0].value}} {{getPrizeType(getSelectedSong().stats[getDifficulty()].score.prize[0].type)}}</td>
+                                            <td ng-if="getSelectedSong().stats[getDifficulty()].score.bestRank > 0" class="table-success">{{getSelectedSong().stats[getDifficulty()].score.prize[0].value}} {{getPrizeType(getSelectedSong().stats[getDifficulty()].score.prize[0].type)}}</td>
+                                            <td ng-if="getSelectedSong().stats[getDifficulty()].score.bestRank <= 1" class="table-danger">{{getSelectedSong().stats[getDifficulty()].score.prize[1].value}} {{getPrizeType(getSelectedSong().stats[getDifficulty()].score.prize[1].type)}}</td>
+                                            <td ng-if="getSelectedSong().stats[getDifficulty()].score.bestRank > 1" class="table-success">{{getSelectedSong().stats[getDifficulty()].score.prize[1].value}} {{getPrizeType(getSelectedSong().stats[getDifficulty()].score.prize[1].type)}}</td>
+                                            <td ng-if="getSelectedSong().stats[getDifficulty()].score.bestRank <= 2" class="table-danger">{{getSelectedSong().stats[getDifficulty()].score.prize[2].value}} {{getPrizeType(getSelectedSong().stats[getDifficulty()].score.prize[2].type)}}</td>
+                                            <td ng-if="getSelectedSong().stats[getDifficulty()].score.bestRank > 2" class="table-success">{{getSelectedSong().stats[getDifficulty()].score.prize[2].value}} {{getPrizeType(getSelectedSong().stats[getDifficulty()].score.prize[2].type)}}</td>
+                                            <td ng-if="getSelectedSong().stats[getDifficulty()].score.bestRank <= 3" class="table-danger">{{getSelectedSong().stats[getDifficulty()].score.prize[3].value}} {{getPrizeType(getSelectedSong().stats[getDifficulty()].score.prize[3].type)}}</td>
+                                            <td ng-if="getSelectedSong().stats[getDifficulty()].score.bestRank > 3" class="table-success">{{getSelectedSong().stats[getDifficulty()].score.prize[3].value}} {{getPrizeType(getSelectedSong().stats[getDifficulty()].score.prize[3].type)}}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Combo</th>
+                                            <td ng-if="getSelectedSong().stats[getDifficulty()].combo.bestRank <= 0" class="table-danger">{{getSelectedSong().stats[getDifficulty()].combo.prize[0].value}} {{getPrizeType(getSelectedSong().stats[getDifficulty()].combo.prize[0].type)}}</td>
+                                            <td ng-if="getSelectedSong().stats[getDifficulty()].combo.bestRank > 0" class="table-success">{{getSelectedSong().stats[getDifficulty()].combo.prize[0].value}} {{getPrizeType(getSelectedSong().stats[getDifficulty()].combo.prize[0].type)}}</td>
+                                            <td ng-if="getSelectedSong().stats[getDifficulty()].combo.bestRank <= 1" class="table-danger">{{getSelectedSong().stats[getDifficulty()].combo.prize[1].value}} {{getPrizeType(getSelectedSong().stats[getDifficulty()].combo.prize[1].type)}}</td>
+                                            <td ng-if="getSelectedSong().stats[getDifficulty()].combo.bestRank > 1" class="table-success">{{getSelectedSong().stats[getDifficulty()].combo.prize[1].value}} {{getPrizeType(getSelectedSong().stats[getDifficulty()].combo.prize[1].type)}}</td>
+                                            <td ng-if="getSelectedSong().stats[getDifficulty()].combo.bestRank <= 2" class="table-danger">{{getSelectedSong().stats[getDifficulty()].combo.prize[2].value}} {{getPrizeType(getSelectedSong().stats[getDifficulty()].combo.prize[2].type)}}</td>
+                                            <td ng-if="getSelectedSong().stats[getDifficulty()].combo.bestRank > 2" class="table-success">{{getSelectedSong().stats[getDifficulty()].combo.prize[2].value}} {{getPrizeType(getSelectedSong().stats[getDifficulty()].combo.prize[2].type)}}</td>
+                                            <td ng-if="getSelectedSong().stats[getDifficulty()].combo.bestRank <= 3" class="table-danger">{{getSelectedSong().stats[getDifficulty()].combo.prize[3].value}} {{getPrizeType(getSelectedSong().stats[getDifficulty()].combo.prize[3].type)}}</td>
+                                            <td ng-if="getSelectedSong().stats[getDifficulty()].combo.bestRank > 3" class="table-success">{{getSelectedSong().stats[getDifficulty()].combo.prize[3].value}} {{getPrizeType(getSelectedSong().stats[getDifficulty()].combo.prize[3].type)}}</td>
+
+                                        </tr>
+                                        <tr>
+                                            <th>Clear</th>
+                                            <td ng-if="getSelectedSong().stats[getDifficulty()].clear.bestRank <= 0" class="table-danger">{{getSelectedSong().stats[getDifficulty()].clear.prize[0].value}} {{getPrizeType(getSelectedSong().stats[getDifficulty()].clear.prize[0].type)}}</td>
+                                            <td ng-if="getSelectedSong().stats[getDifficulty()].clear.bestRank > 0" class="table-success">{{getSelectedSong().stats[getDifficulty()].clear.prize[0].value}} {{getPrizeType(getSelectedSong().stats[getDifficulty()].clear.prize[0].type)}}</td>
+                                            <td ng-if="getSelectedSong().stats[getDifficulty()].clear.bestRank <= 1" class="table-danger">{{getSelectedSong().stats[getDifficulty()].clear.prize[1].value}} {{getPrizeType(getSelectedSong().stats[getDifficulty()].clear.prize[1].type)}}</td>
+                                            <td ng-if="getSelectedSong().stats[getDifficulty()].clear.bestRank > 1" class="table-success">{{getSelectedSong().stats[getDifficulty()].clear.prize[1].value}} {{getPrizeType(getSelectedSong().stats[getDifficulty()].clear.prize[1].type)}}</td>
+                                            <td ng-if="getSelectedSong().stats[getDifficulty()].clear.bestRank <= 2" class="table-danger">{{getSelectedSong().stats[getDifficulty()].clear.prize[2].value}} {{getPrizeType(getSelectedSong().stats[getDifficulty()].clear.prize[2].type)}}</td>
+                                            <td ng-if="getSelectedSong().stats[getDifficulty()].clear.bestRank > 2" class="table-success">{{getSelectedSong().stats[getDifficulty()].clear.prize[2].value}} {{getPrizeType(getSelectedSong().stats[getDifficulty()].clear.prize[2].type)}}</td>
+                                            <td ng-if="getSelectedSong().stats[getDifficulty()].clear.bestRank <= 3" class="table-danger">{{getSelectedSong().stats[getDifficulty()].clear.prize[3].value}} {{getPrizeType(getSelectedSong().stats[getDifficulty()].clear.prize[3].type)}}</td>
+                                            <td ng-if="getSelectedSong().stats[getDifficulty()].clear.bestRank > 3" class="table-success">{{getSelectedSong().stats[getDifficulty()].clear.prize[3].value}} {{getPrizeType(getSelectedSong().stats[getDifficulty()].clear.prize[3].type)}}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col">
+                        <br>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col">
+                        Latest Song Results:
+                    </div>
+                    <div class="col">
+                        Score: {{getLastScore()}}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                       Perfect: {{getLastCombo()[0]}}
+                    </div>
+                    <div class="col">
+                       Great: {{getLastCombo()[1]}}
+                    </div>
+                    <div class="col">
+                       Good: {{getLastCombo()[2]}}
+                    </div>
+                    <div class="col">
+                       Bad: {{getLastCombo()[3]}}
+                    </div>
+                    <div class="col">
+                       Miss: {{getLastCombo()[4]}}
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col">
+                        <br>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col">
+                        <button ng-if="getSelectedSongValue() == 0" type="button" class="btn btn-disabled btn-block">Previous Song</button>
+                        <button ng-if="getSelectedSongValue() != 0" type="button" class="btn btn-primary btn-block" ng-click="changeSelectedSong(-1)">Previous Song</button>
+                    </div>
+                    <div class="col">
+                        <button ng-if="getSelectedSongValue() == 2" type="button" class="btn btn-disabled btn-block">Next Song</button>
+                        <button ng-if="getSelectedSongValue() != 2" type="button" class="btn btn-primary btn-block" ng-click="changeSelectedSong(1)">Next Song</button>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col">
+                        <hr>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col">
+                        Player Ability Level: {{getSkillLevel()}}
+                    </div>
+                    <div class="col">
+                        Experience: {{getSkillExperience().cur}} / {{getSkillExperience().next}}
+                    </div>
+                    <div class="col">
+                        Hit Chances: {{getHitChance()[0]}}% / {{getHitChance()[1]}}% / {{getHitChance()[2]}}% / {{getHitChance()[3]}}% / {{getHitChance()[4]}}%
+                    </div>
+                </div>
+            </span>
+
+            <span ng-if="getSelectedScreen() == 1">
+                <div class="row">
+                    <div class="col">
+                        Regular Box
+                    </div>
+                    <div class="col">
+                        <button ng-if="getPlayerFriendPoints() < 100" type="button" class="btn btn-disabled btn-block">Single Scout (Cost: 100 Friend Points)</button>
+                        <button ng-if="getPlayerFriendPoints() >= 100" type="button" class="btn btn-primary btn-block" ng-click="regularScout(1, 100)">Single Scout (Cost: 100 Friend Points)</button>
+                    </div>
+                    <div class="col">
+                        <button ng-if="getPlayerFriendPoints() < 1000" type="button" class="btn btn-disabled btn-block">Scout 10 (Cost: 1000 Friend Points)</button>
+                        <button ng-if="getPlayerFriendPoints() >= 1000" type="button" class="btn btn-primary btn-block" ng-click="regularScout(10, 1000)">Scout 10 (Cost: 1000 Friend Points)</button>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col">
+                        <hr>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col">
+                        <div class="row">
+                            <div class="col">
+                                Latest Scout:
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div ng-repeat="card in getLatestScout() track by $index" class="col">
+                                <img ng-src="{{getCardList()[card].image}}" witdh="128" height="180"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </span>
+
+            <span ng-if="getSelectedScreen() == 2">
+                <div class="row">
+                    <div ng-repeat="card in getCardList()" class="col">
+                        <div class="row">
+                            <div class="col">
+                                <img ng-if="!card.obtained[0] && !card.obtained[1]" ng-src="{{card.image}}" witdh="128" height="180" style="-webkit-filter: grayscale(1);"/>
+                                <img ng-if="card.obtained[0] && !card.obtained[1]" ng-src="{{card.image}}" witdh="128" height="180"/> <!--205 288-->
+                                <img ng-if="card.obtained[1]" ng-src="{{card.idolImage}}" witdh="128" height="180"/>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <div class="progress">
+                                    <div class="progress-bar" ng-style="{width:((100 * card.level / card.maxlvl) + '%')}">
+                                        <span>{{card.level}}/{{card.maxlvl}}</span>
+                                    </div>
+                                </div>
+                                <br>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </span>
+
+        </div>
+    </body>
+</html>
